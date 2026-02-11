@@ -20,7 +20,6 @@
 
 ## 2. 环境配置
 - **Python**: 3.10+ (使用 conda 环境 `syy1`)
-- **关键依赖**: `torch`, `monai`, `einops`, `timm`
 - **环境变量**: 运行前需确保 `PYTHONPATH` 包含根目录。
   ```bash
   export PYTHONPATH=$PWD:$PYTHONPATH

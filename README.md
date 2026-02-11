@@ -6,8 +6,8 @@
 | **项目根目录** | `/gpfs/share/home/2401111663/syy/3DINO-main-1` |
 | **Python 环境** | `/gpfs/share/home/2401111663/anaconda3/envs/syy1/bin/python` |
 | **预训练权重（外部）** | `/gpfs/share/home/2401111663/syy/3DINO-main/3dino_vit_weights.pth` |
-| **JSON 生成脚本** | `prepare_brats_json.py` (根目录下) |
-| **数据 Datalist** | `/gpfs/share/home/2401111663/syy/braTS_5folds/` (按子任务分文件夹) |
+| **JSON 生成脚本** | `prepare_brats_json.py` & `braTS_5folds/prepare_jsons_v3.py` |
+| **数据 Datalist** | `/gpfs/share/home/2401111663/syy/braTS_5folds/` |
 | **Slurm 脚本** | `sbatch/3dino_v3_ped.sbatch` & `3dino_v3_ssa.sbatch` |
 | **训练日志** | `sbatch/output/v3_ped/` 或 `sbatch/output/v3_ssa/` |
 | **模型保存** | `training_runs/v3_3dino/` |
@@ -33,15 +33,19 @@
 ### A. V3 数据处理脚本 (prepare_jsons_v3.py)
 该脚本专门用于 V3 实验的数据准备，集成了自动切分和合成数据注入功能。
 - **脚本位置**: `/gpfs/share/home/2401111663/syy/braTS_5folds/prepare_jsons_v3.py`
-- **处理逻辑**:
-  1. **读取真实数据**: 加载当前 Fold 的 `train.json` 和 `val.json`。
-  2. **训练/验证二次切分**: 将 `train.json` 里的样本随机打乱，按 **90% (训练) / 10% (验证)** 比例划分10例真实数据作为验证集。
-  3. **测试集确定**: 原始的 `val.json` 被固定为 `test` 
-  4. **加入合成数据**:
-     - **来源**: 从共享目录 `labShare/.../inference`找到`_generated.nii.gz` 和 `_mask.nii.gz`。
-     - **合并**: 将所有合成样本加入到上述 90% 的真实训练样本中。
+- **主要逻辑与模态筛选**:
+  1. **T1c 模态提取**: 脚本会从原始数据的 `modalities` 中自动筛选 `T1-weighted Contrast Enhanced` (或 `T1-weighted Contrast CE`)。由于 V3 实验统一使用单模态，因此格式化后的 `image` 字段仅包含该 T1c 路径的列表。
+  2. **训练/验证二次切分**: 
+     - 脚本加载原始的 `train.json` 后，将其随机打乱。
+     - 划分出固定的 **10 例真实数据** 作为验证集 (`validation`)。
+     - 剩余的所有真实数据被划分为正式训练集 (`training`)。
+  3. **测试集确定**: 原始的 `val.json` 中的所有样本被格式化为 `test` 作为最终评估的测试集。
+  4. **合成数据注入 (Mixed 类型专用)**:
+     - **匹配方案**: 脚本扫描合成目录（如 `.../inference/`），通过后缀匹配 `_generated.nii.gz` (合成的 T1c 图像) 和 `_mask.nii.gz` (对应的标签)。
+     - **合并**: 仅将这些合成样本追加到上述剩下的training数据集中，生成 `mixed` 版本的 JSON。
 
-### B. 生成json命令(prepare_brats_json.py)
+### B. 生成json命令 (prepare_brats_json.py)
+该脚本是通用的格式转换脚本，若需要手动转换或处理多模态，可使用此脚本。
 - **命令示例**:
   ```bash
   python prepare_brats_json.py \

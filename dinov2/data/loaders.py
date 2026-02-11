@@ -211,35 +211,15 @@ def make_segmentation_dataset_3d(
                     input_channels = 1
                 logger.info(f"Detected {input_channels} input channels for BraTS")
 
-    # Custom logic requested by user:
-    # 1. Take 10 real samples from 'training' as validation set
-    # 2. Use 'validation' key as test set
+    # Logic: Read JSON fields directly.
+    # prepare_jsons_v3.py and prepare_ssa_jsons_v3.py now ensure the split is correct:
+    # 'training'   -> training samples (real or mixed)
+    # 'validation' -> fixed 10 real validation samples
+    # 'test'       -> the actual test data (from val.json)
     
-    original_training = datalist['training']
-    original_val = datalist['validation']
-    # If the user says val.json should be test, then the original_val (which comes from val.json) becomes test
-    test_datalist = original_val
-    
-    # Identify real samples in training set
-    # real samples contain "BraTS-PED" or "BraTS-SSA" or just lack "generated"
-    real_indices = []
-    for i, item in enumerate(original_training):
-        path = item['image'][0] if isinstance(item['image'], list) else item['image']
-        if 'BraTS-PED' in path or 'BraTS-SSA' in path or 'generated' not in path:
-            real_indices.append(i)
-    
-    if len(real_indices) < 10:
-        logger.warning(f"Found only {len(real_indices)} real samples, taking all for validation.")
-        val_idx = real_indices
-    else:
-        # Take the first 10 real samples for validation
-        val_idx = real_indices[:10]
-    
-    val_datalist = [original_training[i] for i in val_idx]
-    
-    # Everything else stays in training
-    val_idx_set = set(val_idx)
-    train_datalist = [item for i, item in enumerate(original_training) if i not in val_idx_set]
+    train_datalist = datalist['training']
+    val_datalist = datalist['validation']
+    test_datalist = datalist.get('test', datalist['validation'])
 
     if dataset_name == 'BraTS':
         _expand_brats_modalities(train_datalist)

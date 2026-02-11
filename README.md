@@ -52,8 +52,8 @@
 
 ## 4. 实验流程
 1. **预处理 JSON**: 运行 `prepare_brats_json.py` 为（Real/Mixed）生成对应的 3DINO datalist。
-3. **配置 sbatch**: 修改 `sbatch/3dino_v3_ped.sbatch` 中的 `JSON_REAL` 和 `JSON_MIXED` 路径，确保指向1 中生成的 JSON。
-4. **提交任务**: 一个sbatch文件中有两个实验，一个实验是真实的数据，一个是加入合成数据的混合数据
+3. **配置 sbatch**: 修改 `sbatch/3dino_v3_ped.sbatch` 中的 `JSON_REAL` 和 `JSON_MIXED` 路径，确保指向1 中生成的 JSON。其中权重文件在 `/gpfs/share/home/2401111663/syy/3DINO-main/3dino_vit_weights.pth`
+4. **提交任务**: 一个sbatch文件中有两个实验，一个实验是真实的数据，一个是加入合成数据的混合数据，`/gpfs/share/home/2401111663/syy/3DINO-main-1/sbatch/3dino_ped_v3_f2to5.sbatch`
 5. **结果**: 通过 `sbatch/output/` 下的日志查看 Dice 和 HD95 变化。
 
 ## 5. 数据集结构说明

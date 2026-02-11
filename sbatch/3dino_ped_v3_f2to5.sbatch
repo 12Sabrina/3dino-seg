@@ -18,7 +18,7 @@ PRETRAINED=/gpfs/share/home/2401111663/syy/3DINO-main/3dino_vit_weights.pth
 mkdir -p $BASE_DIR/sbatch/output/v3_ped
 export PYTHONPATH=$BASE_DIR:${PYTHONPATH:-}
 
-# 从 Fold 2 开始处理到 Fold 5
+
 for FOLD in {2..5}; do
   echo "========== Starting PED Fold ${FOLD} (BrainMVP JSON) =========="
   

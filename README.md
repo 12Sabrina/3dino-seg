@@ -14,10 +14,9 @@
 
 ## 权重文件说明
 
-- **外部预训练权重**: 如果使用官方或外部预训练模型，请放置或链接到路径 `/gpfs/share/home/2401111663/syy/3DINO-main/3dino_vit_weights.pth`（示例路径）。
-- **本地训练输出（不纳入仓库）**: 本项目的训练输出位于 `training_runs/`，例如 `training_runs/v3_3dino/.../best_model.pth`。这些为训练产生的模型文件，属于用户输出，不应直接提交到 Git 仓库（已在 `.gitignore` 中排除）。
+- **预训练权重**: 如果使用官方或外部预训练模型，请放置或链接到路径 `/gpfs/share/home/2401111663/syy/3DINO-main/3dino_vit_weights.pth`。
 
-> 若需在仓库中管理大型权重文件，请考虑使用 Git LFS 或把权重上传到共享存储并在 README 中给出下载链接。
+
 
 ## 2. 环境配置
 - **Python**: 3.10+ (使用 conda 环境 `syy1`)

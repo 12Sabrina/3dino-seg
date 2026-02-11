@@ -14,7 +14,7 @@
 
 ## 权重文件说明
 
-- **预训练权重**: 如果使用官方或外部预训练模型，请放置或链接到路径 `/gpfs/share/home/2401111663/syy/3DINO-main/3dino_vit_weights.pth`。
+- **预训练权重**:  `/gpfs/share/home/2401111663/syy/3DINO-main/3dino_vit_weights.pth`。
 
 
 
@@ -26,8 +26,6 @@
   ```
 
 ## 3. 数据列表生成 (JSON Generation)
-在微调训练前，需将分折原始 JSON 转换为 3DINO 专用格式。V3 实验主要使用项目特定的处理脚本。
-
 ### A. V3 数据处理脚本 (prepare_jsons_v3.py)
 该脚本专门用于 V3 实验的数据准备，集成了自动切分和合成数据注入功能。
 - **脚本位置**: `/gpfs/share/home/2401111663/syy/braTS_5folds/prepare_jsons_v3.py`
